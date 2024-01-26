@@ -1,9 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:fibre_workers_management_app/models/task_model.dart';
+import 'package:fibre_workers_management_app/services/tasks_service.dart';
 
-class MainScreen extends StatelessWidget {
+class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
 
   static const routeName = '/home';
+
+  @override
+  _MainScreenState createState() => _MainScreenState();
+}
+
+class _MainScreenState extends State<MainScreen> {
+  final TasksService tasksService = TasksService('https://6464bd39127ad0b8f8a6981d.mockapi.io/api/todo/travaux');
+  late Future<List<TaskModel>> tasks;
+
+  @override
+  void initState() {
+    super.initState();
+    tasks = tasksService.fetchTasks();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +50,6 @@ class MainScreen extends StatelessWidget {
             },
             style: ElevatedButton.styleFrom(
               shape: RoundedRectangleBorder(
-
                 borderRadius: BorderRadius.circular(8.0),
               ),
             ),
@@ -51,28 +66,60 @@ class MainScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16.0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              ElevatedButton.icon(
+                onPressed: () {
+                  // Add your "Mes Documents" button functionality here
+                },
+                icon: Icon(Icons.description), // Icon for Mes Documents
+                label: Text('Mes Documents'),
+              ),
+              ElevatedButton.icon(
+                onPressed: () {
+                  // Add your "Mes Recaps" button functionality here
+                },
+                icon: Icon(Icons.receipt), // Icon for Mes Recaps
+                label: Text('Mes Recaps'),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16.0),
           Expanded(
-            child: ListView.builder(
-              itemCount: 3,
-              itemBuilder: (BuildContext context, int index) {
-                return Card(
-                  shape: RoundedRectangleBorder(
-                    side: BorderSide(
-                      color: index == 0
-                          ? Colors.green
-                          : index == 1
-                          ? Colors.yellowAccent
-                          : Colors.red,
-                      width: 2,
-                    ),
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  child: ListTile(
-                    title: Text('Task ${index + 1}'),
-                    subtitle: Text('Details ${index + 1}'),
-                    trailing: Text('21 March'),
-                  ),
-                );
+            child: FutureBuilder<List<TaskModel>>(
+              future: tasks,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  return ListView.builder(
+                    itemCount: snapshot.data!.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      TaskModel task = snapshot.data![index];
+                      return Card(
+                        shape: RoundedRectangleBorder(
+                          side: BorderSide(
+                            color: index == 0
+                                ? Colors.green
+                                : index == 1
+                                ? Colors.yellowAccent
+                                : Colors.red,
+                            width: 2,
+                          ),
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        child: ListTile(
+                          title: Text(task.titre),
+                          subtitle: Text(task.description),
+                          trailing: Text('21 March'), // You may need to use task.date or something else
+                        ),
+                      );
+                    },
+                  );
+                }
               },
             ),
           ),
@@ -88,12 +135,10 @@ class MainScreen extends StatelessWidget {
             icon: Icon(Icons.person),
             label: 'profil',
           ),
-
           BottomNavigationBarItem(
             icon: Icon(Icons.notifications),
             label: 'Notifications',
           ),
-
         ],
       ),
     );

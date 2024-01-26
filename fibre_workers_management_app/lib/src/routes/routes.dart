@@ -11,7 +11,7 @@ class RouteGenerator {
       case '/splash':
         return MaterialPageRoute(builder: (_) => const SplashScreen());
       case '/main_screen':
-        return MaterialPageRoute(builder: (_) => const MainScreen());
+        return MaterialPageRoute(builder: (_) => MainScreen());
       case '/login':
         return MaterialPageRoute(builder: (_) => LoginPage());
     // Add more routes as needed
