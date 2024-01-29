@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:fibre_workers_management_app/models/task_model.dart';
-import 'package:fibre_workers_management_app/services/tasks_service.dart';
+import 'package:fibre_workers_management_app/src/models/task_model.dart';
+import 'package:fibre_workers_management_app/src/services/tasks_service.dart';
 import 'package:fibre_workers_management_app/widgets/bottom_navigation_bar.dart';
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);

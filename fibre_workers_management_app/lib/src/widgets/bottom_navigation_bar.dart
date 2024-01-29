@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fibre_workers_management_app/screens/Profile_Screen.dart';
+import 'package:fibre_workers_management_app/src/screens/Profile_Screen.dart';
 
 class CustomBottomNavigationBar extends StatelessWidget {
   const CustomBottomNavigationBar({Key? key}) : super(key: key);
